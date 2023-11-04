@@ -1,0 +1,106 @@
+sensor:
+  - platform: template
+    sensors:
+      termostato_set_temperature:
+        friendly_name: 'Set temperatura termostato'
+        unit_of_measurement: '°C'
+        value_template: "{{ state_attr('climate.thermostat', 'temperature') }}"
+        
+  - platform: template
+    sensors:
+      termostato_current_temperature:
+        friendly_name: 'Temperatura Rilevata Termostato'
+        unit_of_measurement: '°C'
+        value_template: "{{ state_attr('climate.thermostat', 'current_temperature') }}"
+        
+  - platform: template
+    sensors:
+      termostato_set_temperature_normalized:
+        friendly_name: 'Impostazione Termostato Normalizzata'
+        unit_of_measurement: '°C'
+        value_template: >
+          {% set min_temp_real = 5 %}
+          {% set max_temp_real = 35 %}
+          {% set min_temp_displayed = 1 %}
+          {% set max_temp_displayed = 7 %}
+          {% set temp = states('sensor.termostato_set_temperature') | float %}
+          {% set normalized_temp = ((temp - min_temp_displayed) / (max_temp_displayed - min_temp_displayed)) * (max_temp_real - min_temp_real) + min_temp_real | round(1) %}
+          {{ normalized_temp }}
+          
+  - platform: template
+    sensors:          
+      termostato_current_temperature_normalized:
+        friendly_name: 'Temperatura Rilevata Termostato Normalizzata'
+        unit_of_measurement: '°C'
+        value_template: >
+          {% set min_temp_real = 21 %}
+          {% set max_temp_real = 22.5 %}
+          {% set min_temp_displayed = 4.2 %}
+          {% set max_temp_displayed = 4.5 %}
+          {% set temp = states('sensor.termostato_current_temperature') | float %}
+          {% set normalized_temp = ((temp - min_temp_displayed) / (max_temp_displayed - min_temp_displayed)) * (max_temp_real - min_temp_real) + min_temp_real | round(1) %}
+          {{ normalized_temp }}
+          
+  - platform: template
+    sensors:
+      thermostat_state:
+        friendly_name: "Stato Termostato"
+        value_template: "{{ states('climate.thermostat') }}"
+
+  - platform: template
+    sensors:
+      heating_state:
+        friendly_name: "Stato del Riscaldamento"
+        value_template: >-
+          {% if is_state('sensor.thermostat_state', 'off') %}
+            off
+          {% elif states('sensor.termostato_set_temperature_normalized') | float - states('sensor.termostato_current_temperature_normalized') | float > 0.1 %}
+            on
+          {% else %}
+            off
+          {% endif %}
+        
+  - platform: template
+    sensors:
+      heating_state_icon:
+        friendly_name: "Icona Stato del Riscaldamento"
+        value_template: >-
+          {% if is_state('sensor.heating_state', 'on') %}
+            on
+          {% else %}
+            off
+          {% endif %}        
+          
+          
+switch:
+  - platform: template
+    switches:
+      set_climate_thermostat_down:
+        friendly_name: "Set Climate Thermostat down"
+        value_template: "{{ is_state('climate.thermostat', 'on') }}"
+        turn_on:
+          service: climate.set_temperature
+          data_template:
+            entity_id: climate.thermostat
+            temperature: "{{ state_attr('climate.thermostat', 'temperature') - 0.1 }}"
+        turn_off:
+          service: climate.turn_off
+          data:
+            entity_id: climate.thermostat
+            
+  - platform: template
+    switches:
+      set_climate_thermostat_up:
+        friendly_name: "Set Climate Thermostat up"
+        value_template: "{{ is_state('climate.thermostat', 'on') }}"
+        turn_on:
+          service: climate.set_temperature
+          data_template:
+            entity_id: climate.thermostat
+            temperature: "{{ state_attr('climate.thermostat', 'temperature') + 0.1 }}"
+        turn_off:
+          service: climate.turn_off
+          data:
+            entity_id: climate.thermostat
+
+

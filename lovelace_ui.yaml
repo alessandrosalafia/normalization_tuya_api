@@ -1,0 +1,107 @@
+type: picture-elements
+elements:
+  - type: image
+    image: local/thermostat/termostato_casa_5.png
+    entity: climate.thermostat
+    tap_action:
+      action: none
+    state_image:
+      'off': /local/thermostat/termostato_casa_4.png
+    style:
+      top: 50%
+      left: 50%
+      width: 100%
+  - type: image
+    image: local/thermostat/arrow-left-bold-box-outline.png
+    entity: switch.set_climate_thermostat_down
+    tap_action:
+      action: toggle
+    style:
+      top: 80.3%
+      left: 17%
+      width: 15.3%
+  - type: image
+    image: local/thermostat/arrow-right-bold-box-outline.png
+    entity: switch.set_climate_thermostat_up
+    tap_action:
+      action: toggle
+    style:
+      top: 80.3%
+      left: 80%
+      width: 15.3%
+  - type: state-label
+    entity: sensor.termostato_current_temperature_normalized
+    tap_action:
+      action: none
+    style:
+      top: 27%
+      left: 30%
+      font-size: 50px
+      color: rgb(89, 83, 83)
+  - type: image
+    image: local/thermostat/rilevata.png
+    entity: switch.set_climate_thermostat_up
+    tap_action:
+      action: none
+    style:
+      top: 14%
+      left: 24%
+      width: 30%
+  - type: image
+    image: local/thermostat/setpoint.png
+    entity: switch.set_climate_thermostat_up
+    tap_action:
+      action: none
+    style:
+      top: 26%
+      left: 76%
+      width: 30%
+  - type: state-label
+    entity: sensor.termostato_set_temperature_normalized
+    tap_action:
+      action: none
+    style:
+      top: 39%
+      left: 78%
+      font-size: 35px
+      color: rgb(89, 83, 83)
+  - type: image
+    image: local/thermostat/power_on.png
+    entity: climate.thermostat
+    tap_action:
+      action: toggle
+    style:
+      top: 12%
+      left: 76%
+      width: 10%
+  - type: image
+    image: local/thermostat/on_2.png
+    entity: climate.thermostat
+    tap_action:
+      action: none
+    state_image:
+      'off': /local/thermostat/off.png
+    style:
+      top: 12%
+      left: 90%
+      width: 15%
+  - type: image
+    image: local/thermostat/fire.png
+    entity: sensor.heating_state
+    tap_action:
+      action: none
+    state_image:
+      'off': /local/thermostat/fire-off.png
+    style:
+      top: 40%
+      left: 50%
+      width: 10%
+  - type: image
+    image: local/thermostat/heating_state3.png
+    tap_action:
+      action: none
+    style:
+      top: 41%
+      left: 31%
+      width: 26%
+image: local/thermostat/termostato_casa_4.png
